@@ -52,9 +52,9 @@ names(age) <- c('stco_code', 'state', 'county', 'stco_name', 'Total population',
 names(sex) <- c('stco_code', 'state', 'county', 'stco_name', 'Total population', 'Population, male', 'Population, female')
 names(race) <- c('stco_code', 'state', 'county', 'stco_name', 'Total population', 'Population, White', 'Population, Black or African American', 'Population, American Indian and Alaska Native', 'Population, Asian', 'Population, Native Hawaiian and Pacific Islander', 'Population, Other race', 'Population, Two or more races', 'Population, Hispanic or Latino')
 
-list_age <- names(age)
-list_sex <- names(sex)
-list_race <- names(race)
+`Demographic and housing estimates, age` <- names(age)
+`Demographic and housing estimates, sex` <- names(sex)
+`Demographic and housing estimates, race` <- names(race)
 
 dfs <- objects()
 df_co_all <- mget(dfs[grep("list_",dfs)])
