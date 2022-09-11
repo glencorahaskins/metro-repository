@@ -76,5 +76,5 @@ co_all <- co_all %>% relocate(`Total population`, .after = stco_name)
 list_all_co <- df_co_all
 
 
-
+names(list_all_co) <- c("Demographic and housing estimates, population by age", "Demographic and housing estimates, population by race", "Demographic and housing estimates, population by sex")
 
