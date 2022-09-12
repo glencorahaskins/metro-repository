@@ -1,5 +1,5 @@
 library(devtools)
-SourceURL <- "https://raw.githubusercontent.com/glencorahaskins/metro-repository/main/acs_cty.R"
+SourceURL <- "https://raw.githubusercontent.com/glencorahaskins/metro-repository/main/metro-repository-app/data/acs_cty.R"
 source_url(SourceURL)
 
 library(metro.data)
