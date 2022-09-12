@@ -1,6 +1,10 @@
+setwd("C:/Users/ghask/The Brookings Institution/Metro Research - JParilla/Glencora/GitHub/metro-repository/metro-repository-app")
+
 library(devtools)
-SourceURL <- "https://raw.githubusercontent.com/glencorahaskins/metro-repository/main/metro-repository-app/data/acs_cty.R"
-source_url(SourceURL)
+acs_cty <- "https://raw.githubusercontent.com/glencorahaskins/metro-repository/main/metro-repository-app/data/acs_cty.R"
+source_url(acs_cty)
+acs_cbsa <- "https://raw.githubusercontent.com/glencorahaskins/metro-repository/main/metro-repository-app/data/acs_cbsa.R"
+source_url(acs_cbsa)
 
 library(metro.data)
 county_cbsa_st <- county_cbsa_st %>% select('stco_code', 'co_type', 'st_code', 'st_name', 'cbsa_code', 'cbsa_name', 'cbsa_type', 'cbsa_is.top100', 'cbsa_size')
@@ -19,9 +23,9 @@ library(ggplot2)
 library(plotly)
 
 # load("data/co_all.rda")
-load("data/cbsa_all.rda")
+# load("data/cbsa_all.rda")
 # load("data/list_all_co.rda")
-load("data/list_all_cbsa.rda")
+# load("data/list_all_cbsa.rda")
 # load("data/county_cbsa_st.rda")
 
 create_scatter <- function(df, var_x, var_y,...){
