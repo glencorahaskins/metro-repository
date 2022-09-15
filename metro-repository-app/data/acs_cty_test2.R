@@ -282,35 +282,3 @@ acs_cty <- acs_cty %>% relocate(state, .after = stco_code)
 acs_cty <- acs_cty %>% relocate(county, .after = state)
 acs_cty <- acs_cty %>% relocate(stco_name, .after = county)
 acs_cty <- acs_cty %>% relocate(`Total population`, .after = stco_name)
-
-# --------------------------------------------------------------------
-
-dfs <- objects()
-df_co_all <- mget(dfs[grep("list_",dfs)])
-
-list_all_co <- df_co_all
-
-list_all_co[order(names(list_all_co))]
-
-names(list_all_co) <- c('Demographic and housing estimates, population by age', 
-                        'Population with a bachelors degree or higher, by race',
-                        'Births in the past 12 months, by age', 
-                        'Means of transportation to work by selected characteristics', 
-                        'Disability characteristics', 
-                        'Educational attainment, population 25 years and older', 
-                        'Employment-to-population ratio, by race', 
-                        'Geographic mobility by selected characteristics', 
-                        'Population with a high school diploma or higher, by race', 
-                        'Selected characteristics of health insurance coverage, by race', 
-                        'Presence and types of internet subscriptions', 
-                        'Language spoken at home', 
-                        'Labor force participation rate, by race', 
-                        'Marital status', 
-                        'Median earnings in the past 12 months (categorized)', 
-                        'Median earnings in the past 12 months by race (in dollars)', 
-                        'Poverty status in the past 12 months, by race', 
-                        'Demographic and housing estimates, population by race', 
-                        'Gross rent as a percentage of household income', 
-                        'Demographic and housing estimates, population by sex', 
-                        'Households enrolled in SNAP, by race')
-
