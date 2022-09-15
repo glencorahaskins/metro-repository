@@ -67,6 +67,11 @@ options(warn = oldw)
 
 rm(oldw)
 
+debt_auto <- subset(debt_auto, select = -c(state_name))
+debt_med <- subset(debt_med, select = -c(state_name))
+debt_student <- subset(debt_student, select = -c(state_name))
+debt_overall <- subset(debt_overall, select = -c(state_name))
+
 list_auto <- names(debt_auto)
 list_med <- names(debt_med)
 list_student <- names(debt_student)
