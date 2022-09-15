@@ -250,12 +250,9 @@ list_snap <- names(snap)
 list_language <- names(language)
 list_disability <- names(disability)
 
-dfs <- objects()
-df_co_all <- mget(dfs[grep("list_",dfs)])
+acs_all <- age
 
-co_all <- age
-
-co_all <- co_all %>%
+acs_all <- acs_all %>%
   left_join(sex, by='stco_code', all.x=TRUE) %>%  
   left_join(race, by='stco_code', all.x=TRUE) %>%  
   left_join(marriage, by='stco_code', all.x=TRUE) %>% 
@@ -277,14 +274,19 @@ co_all <- co_all %>%
   left_join(language, by='stco_code', all.x=TRUE) %>% 
   left_join(disability, by='stco_code', all.x=TRUE)
 
-common <- co_all %>% select(ends_with(c(".x", ".y")))
+common <- acs_all %>% select(ends_with(c(".x", ".y")))
 list_common <- names(common)
-co_all <- co_all[,-which(names(co_all) %in% list_common)]
+acs_all <- acs_all[,-which(names(acs_all) %in% list_common)]
 
-co_all <- co_all %>% relocate(state, .after = stco_code)
-co_all <- co_all %>% relocate(county, .after = state)
-co_all <- co_all %>% relocate(stco_name, .after = county)
-co_all <- co_all %>% relocate(`Total population`, .after = stco_name)
+acs_all <- acs_all %>% relocate(state, .after = stco_code)
+acs_all <- acs_all %>% relocate(county, .after = state)
+acs_all <- acs_all %>% relocate(stco_name, .after = county)
+acs_all <- acs_all %>% relocate(`Total population`, .after = stco_name)
+
+# --------------------------------------------------------------------
+
+dfs <- objects()
+df_co_all <- mget(dfs[grep("list_",dfs)])
 
 list_all_co <- df_co_all
 
