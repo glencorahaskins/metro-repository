@@ -29,6 +29,8 @@ library(stringr)
 library(sqldf)
 library(tidycensus)
 library(tidyverse)
+library(readxl)
+library(openxlsx)
 library(writexl)
 library(xlsx)
 
