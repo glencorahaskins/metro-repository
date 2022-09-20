@@ -77,26 +77,9 @@ mutual_friends <- socialcapital[mutual_friends]
 public_good <- c("stco_code", "Percentage of Facebook users who are members of a group about volunteering or activism", "Number of Facebook Pages predicted to be Public Good pages")
 public_good <- socialcapital[public_good]
 
-list_childhood_sc <- names(childhood_sc)
-list_economic_connectedness <- names(economic_connectedness)
-list_friending_bias <- names(friending_bias)
-list_mutual_friends <- names(mutual_friends)
-list_public_good <- names(public_good)
-list_SES_exposure <- names(SES_exposure)
-
-dfs <- objects()
-df_socialcapital <- mget(dfs[grep("list_",dfs)])
-
-list_all_socialcapital <- df_socialcapital
-
-
-
-
-
-
-
-
-
-
-
-
+list_socialcapitalatlas_childhood_sc <- names(childhood_sc)
+list_socialcapitalatlas_economic_connectedness <- names(economic_connectedness)
+list_socialcapitalatlas_friending_bias <- names(friending_bias)
+list_socialcapitalatlas_mutual_friends <- names(mutual_friends)
+list_socialcapitalatlas_public_good <- names(public_good)
+list_socialcapitalatlas_SES_exposure <- names(SES_exposure)

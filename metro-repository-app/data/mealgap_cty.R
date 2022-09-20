@@ -51,8 +51,3 @@ names(mealgap)[names(mealgap) == 'totalpopulation1519acs'] <- 'Total population,
 names(mealgap)[names(mealgap) == 'snap_costpermeal_s'] <- 'SNAP cost per meal'
 
 list_mealgap <- names(mealgap)
-
-dfs <- objects()
-df_mealgap <- mget(dfs[grep("list_",dfs)])
-
-list_all_mealgap <- df_mealgap

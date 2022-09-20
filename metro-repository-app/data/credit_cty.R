@@ -32,9 +32,6 @@ credit[,-1] <- lapply(credit[,-1], as.numeric)
 options(warn = oldw)
 rm(oldw)
 
-subprime <- c("stco_code", "Share with Subprime Credit Score, All", "Share with Subprime Credit Score, Majority White Communities", "Share with Subprime Credit Score, Communities of Color")
-subprime <- credit[subprime]
-
 collections <- c("stco_code", "Share with Any Debt in Collections, All", "Median Debt in Collections, All", "Share with Any Debt in Collections, Majority White Communities", "Median Debt in Collections, Majority White Communities", "Share with Any Debt in Collections, Communities of Color", "Median Debt in Collections, Communities of Color")
 collections <- credit[collections]
 
@@ -62,18 +59,21 @@ afs_delinquency <- credit[afs_delinquency]
 credit_score <- c("stco_code", "Median Credit Score, All", "Median Credit Score, Majority White Communities", "Median Credit Score, Communities of Color")
 credit_score <- credit[credit_score]
 
+credit_score_subprime <- c("stco_code", "Share with Subprime Credit Score, All", "Share with Subprime Credit Score, Majority White Communities", "Share with Subprime Credit Score, Communities of Color")
+credit_score_subprime <- credit[credit_score_subprime]
+
 rm(credit)
 
-list_afs_credit <- names(afs_credit)
-list_afs_delinquency <- names(afs_delinquency)
-list_ar_delinquency <- names(ar_delinquency)
-list_cc_delinquency <- names(cc_delinquency)
-list_ccu <- names(ccu)
-list_collections <- names(collections)
-list_credit_score <- names(credit_score)
-list_mort_delinquency <- names(mort_delinquency)
-list_sl_delinquency <- names(sl_delinquency)
-list_subprime <- names(subprime)
+list_debtinamerica_afs_credit <- names(afs_credit)
+list_debtinamerica_afs_delinquency <- names(afs_delinquency)
+list_debtinamerica_ar_delinquency <- names(ar_delinquency)
+list_debtinamerica_cc_delinquency <- names(cc_delinquency)
+list_debtinamerica_ccu <- names(ccu)
+list_debtinamerica_collections <- names(collections)
+list_debtinamerica_credit_score <- names(credit_score)
+list_debtinamerica_credit_score_subprime <- names(credit_score_subprime)
+list_debtinamerica_mort_delinquency <- names(mort_delinquency)
+list_debtinamerica_sl_delinquency <- names(sl_delinquency)
 
 credit <- afs_credit
 
@@ -113,12 +113,8 @@ common_col_names <- intersect(names(credit), names(sl_delinquency))
 credit <- merge(credit, sl_delinquency, by = common_col_names, all.x = TRUE)
 rm(common_col_names)
 
-common_col_names <- intersect(names(credit), names(subprime))
-credit <- merge(credit, subprime, by = common_col_names, all.x = TRUE)
+common_col_names <- intersect(names(credit), names(credit_score_subprime))
+credit <- merge(credit, credit_score_subprime, by = common_col_names, all.x = TRUE)
 rm(common_col_names)
 
-dfs <- objects()
-df_credit <- mget(dfs[grep("list_",dfs)])
-
-list_all_credit <- df_credit
 
