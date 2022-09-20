@@ -41,4 +41,36 @@ names(jobloss)[names(jobloss) == 'total_li_workers_employed'] <- 'Total low-inco
 names(jobloss)[names(jobloss) == 'X000'] <- 'Total low-income jobs lost'
 names(jobloss)[names(jobloss) == 'low_income_worker_job_loss_rate'] <- 'Low-income worker job loss rate'
 
+# Encode county names ------------------------
+
+library(tidycensus)
+data(fips_codes)
+
+fips_codes$stco_name <- NA
+fips_codes$stco_name <- as.character(fips_codes$stco_name)
+
+fips_codes$stco_name <- paste(fips_codes$county, ", ", fips_codes$state_name)
+fips_codes$stco_name <- gsub('  ', ' ',fips_codes$stco_name)
+fips_codes$stco_name <- gsub(' ,', ',',fips_codes$stco_name)
+
+fips_codes$stco_code <- NA
+fips_codes$stco_code <- as.character(fips_codes$stco_code)
+
+fips_codes$stco_code <- paste(fips_codes$state_code, fips_codes$county_code)
+fips_codes$stco_code <- gsub(' ','',fips_codes$stco_code)
+
+stco <- names(fips_codes) %in% c("stco_code", "stco_name")
+fips_codes <- fips_codes[stco]
+rm(stco)
+
+common_col_names <- intersect(names(jobloss), names(fips_codes))
+jobloss <- merge(jobloss, fips_codes, by = common_col_names, all.x = TRUE)
+rm(common_col_names)
+
+rm(fips_codes)
+
+jobloss <- jobloss %>% relocate(stco_name, .after = stco_code)
+
+# ------------------------------------------------------------------
+
 list_jobloss <- names(jobloss)

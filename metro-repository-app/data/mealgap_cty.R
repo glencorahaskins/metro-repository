@@ -50,4 +50,36 @@ names(mealgap)[names(mealgap) == 'cost_gt_tfp_plus_15_percent'] <- 'Indicator of
 names(mealgap)[names(mealgap) == 'totalpopulation1519acs'] <- 'Total population, ACS 2019'
 names(mealgap)[names(mealgap) == 'snap_costpermeal_s'] <- 'SNAP cost per meal'
 
+# Encode county names ------------------------
+
+library(tidycensus)
+data(fips_codes)
+
+fips_codes$stco_name <- NA
+fips_codes$stco_name <- as.character(fips_codes$stco_name)
+
+fips_codes$stco_name <- paste(fips_codes$county, ", ", fips_codes$state_name)
+fips_codes$stco_name <- gsub('  ', ' ',fips_codes$stco_name)
+fips_codes$stco_name <- gsub(' ,', ',',fips_codes$stco_name)
+
+fips_codes$stco_code <- NA
+fips_codes$stco_code <- as.character(fips_codes$stco_code)
+
+fips_codes$stco_code <- paste(fips_codes$state_code, fips_codes$county_code)
+fips_codes$stco_code <- gsub(' ','',fips_codes$stco_code)
+
+stco <- names(fips_codes) %in% c("stco_code", "stco_name")
+fips_codes <- fips_codes[stco]
+rm(stco)
+
+common_col_names <- intersect(names(mealgap), names(fips_codes))
+mealgap <- merge(mealgap, fips_codes, by = common_col_names, all.x = TRUE)
+rm(common_col_names)
+
+rm(fips_codes)
+
+mealgap <- mealgap %>% relocate(stco_name, .after = stco_code)
+
+# ------------------------------------------------------------------
+
 list_mealgap <- names(mealgap)

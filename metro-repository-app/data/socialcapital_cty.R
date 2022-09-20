@@ -56,25 +56,57 @@ names(socialcapital)[names(socialcapital) == 'support_ratio_county'] <- 'Proport
 names(socialcapital)[names(socialcapital) == 'volunteering_rate_county'] <- 'Percentage of Facebook users who are members of a group about volunteering or activism'
 names(socialcapital)[names(socialcapital) == 'civic_organizations_county'] <- 'Number of Facebook Pages predicted to be Public Good pages'
 
-childhood_sc <- c("stco_code", "Number of children with below-national-median parental household income", "Childhood economic connectedness", "Childhood economic connectedness for high-SES individuals",
+# Encode county names ------------------------
+
+library(tidycensus)
+data(fips_codes)
+
+fips_codes$stco_name <- NA
+fips_codes$stco_name <- as.character(fips_codes$stco_name)
+
+fips_codes$stco_name <- paste(fips_codes$county, ", ", fips_codes$state_name)
+fips_codes$stco_name <- gsub('  ', ' ',fips_codes$stco_name)
+fips_codes$stco_name <- gsub(' ,', ',',fips_codes$stco_name)
+
+fips_codes$stco_code <- NA
+fips_codes$stco_code <- as.character(fips_codes$stco_code)
+
+fips_codes$stco_code <- paste(fips_codes$state_code, fips_codes$county_code)
+fips_codes$stco_code <- gsub(' ','',fips_codes$stco_code)
+
+stco <- names(fips_codes) %in% c("stco_code", "stco_name")
+fips_codes <- fips_codes[stco]
+rm(stco)
+
+common_col_names <- intersect(names(socialcapital), names(fips_codes))
+socialcapital <- merge(socialcapital, fips_codes, by = common_col_names, all.x = TRUE)
+rm(common_col_names)
+
+rm(fips_codes)
+
+socialcapital <- socialcapital %>% relocate(stco_name, .after = stco_code)
+
+# ------------------------------------------------------------------
+
+childhood_sc <- c("stco_code", "stco_name", "Number of children with below-national-median parental household income", "Childhood economic connectedness", "Childhood economic connectedness for high-SES individuals",
                   "Mean exposure to high-parental-SES peers in high school (averaged over low-parental-SES)", "Mean exposure to high-parental-SES peers in high school (averaged over high-parental-SES)",
                   "Childhood friending bias, high-SES")
 childhood_sc <- socialcapital[childhood_sc]
 
-economic_connectedness <- c("stco_code", "Baseline economic connectedness", "Childhood economic connectedness", "Economic connectedness for high-SES individuals", "Childhood economic connectedness for high-SES individuals")
+economic_connectedness <- c("stco_code", "stco_name", "Baseline economic connectedness", "Childhood economic connectedness", "Economic connectedness for high-SES individuals", "Childhood economic connectedness for high-SES individuals")
 economic_connectedness <- socialcapital[economic_connectedness]
 
-SES_exposure <- c("stco_code", "Mean exposure to high-SES individuals for low-SES individuals", "Mean exposure to high-SES individuals for high-SES individuals",
+SES_exposure <- c("stco_code", "stco_name", "Mean exposure to high-SES individuals for low-SES individuals", "Mean exposure to high-SES individuals for high-SES individuals",
                   "Mean exposure to high-parental-SES peers in high school (averaged over low-parental-SES)", "Mean exposure to high-parental-SES peers in high school (averaged over high-parental-SES)")
 SES_exposure <- socialcapital[SES_exposure]
 
-friending_bias <- c("stco_code", "Friending bias, all", "Childhood friending bias, high-SES")
+friending_bias <- c("stco_code", "stco_name", "Friending bias, all", "Childhood friending bias, high-SES")
 friending_bias <- socialcapital[friending_bias]
 
-mutual_friends <- c("stco_code", "Fraction of individual friend pairs who are also friends with each other", "Proportion of within-county-friendships where pair of friends share a third mutual friend in the same county")
+mutual_friends <- c("stco_code", "stco_name", "Fraction of individual friend pairs who are also friends with each other", "Proportion of within-county-friendships where pair of friends share a third mutual friend in the same county")
 mutual_friends <- socialcapital[mutual_friends]
 
-public_good <- c("stco_code", "Percentage of Facebook users who are members of a group about volunteering or activism", "Number of Facebook Pages predicted to be Public Good pages")
+public_good <- c("stco_code", "stco_name", "Percentage of Facebook users who are members of a group about volunteering or activism", "Number of Facebook Pages predicted to be Public Good pages")
 public_good <- socialcapital[public_good]
 
 list_socialcapitalatlas_childhood_sc <- names(childhood_sc)
