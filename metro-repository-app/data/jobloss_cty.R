@@ -43,6 +43,13 @@ names(jobloss)[names(jobloss) == 'low_income_worker_job_loss_rate'] <- 'Low-inco
 
 list_jobloss <- names(jobloss)
 
+dfs <- objects()
+df_jobloss <- mget(dfs[grep("list_",dfs)])
+
+list_all_jobloss <- df_jobloss
+
+
+
 
 
 

@@ -84,6 +84,11 @@ list_mutual_friends <- names(mutual_friends)
 list_public_good <- names(public_good)
 list_SES_exposure <- names(SES_exposure)
 
+dfs <- objects()
+df_socialcapital <- mget(dfs[grep("list_",dfs)])
+
+list_all_socialcapital <- df_socialcapital
+
 
 
 

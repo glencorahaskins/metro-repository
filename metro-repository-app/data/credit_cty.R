@@ -116,3 +116,9 @@ rm(common_col_names)
 common_col_names <- intersect(names(credit), names(subprime))
 credit <- merge(credit, subprime, by = common_col_names, all.x = TRUE)
 rm(common_col_names)
+
+dfs <- objects()
+df_credit <- mget(dfs[grep("list_",dfs)])
+
+list_all_credit <- df_credit
+
