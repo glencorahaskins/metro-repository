@@ -10,8 +10,7 @@ cty <- "https://raw.githubusercontent.com/glencorahaskins/metro-repository/main/
 source_url(cty)
 
 library(metro.data)
-county_cbsa_st <- county_cbsa_st %>% select('stco_code', 'stco_name', 'co_type', 'st_code', 'st_name', 'cbsa_code', 'cbsa_name', 'cbsa_type', 'cbsa_is.top100', 'cbsa_size')
-county_cbsa_st <- county_cbsa_st %>% relocate(stco_name, .after = stco_code)
+county_cbsa_st <- county_cbsa_st %>% select('stco_code', 'co_type', 'st_code', 'st_name', 'cbsa_code', 'cbsa_name', 'cbsa_type', 'cbsa_is.top100', 'cbsa_size')
 county_cbsa_st <- county_cbsa_st[complete.cases(county_cbsa_st),]
 county_cbsa_st$cbsa_name <- sort(county_cbsa_st$cbsa_name, decreasing = FALSE, na.last = TRUE)
 
