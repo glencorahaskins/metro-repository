@@ -8,23 +8,10 @@ source_url(acs_cty)
 
 library(metro.data)
 county_cbsa_st <- county_cbsa_st %>% select('stco_code', 'co_type', 'st_code', 'st_name', 'cbsa_code', 'cbsa_name', 'cbsa_type', 'cbsa_is.top100', 'cbsa_size')
+county_cbsa_st <- county_cbsa_st[complete.cases(county_cbsa_st),]
+county_cbsa_st$cbsa_name <- sort(county_cbsa_st$cbsa_name, decreasing = FALSE, na.last = TRUE)
 
-
-#----------------
-cbsas <- unique(county_cbsa_st$cbsa_name)
-
-cbsas <- data.frame(unlist(cbsas))
-names(cbsas)[names(cbsas) == 'unlist.cbsas.'] <- 'cbsa_name'
-cbsas <- cbsas[!apply(is.na(cbsas) | cbsas == '', 1, all),]
-cbsas <- data.frame(unlist(cbsas))
-names(cbsas)[names(cbsas) == 'unlist.cbsas.'] <- 'cbsa_name'
-
-cbsas <- sort(cbsas$cbsa_name)
-cbsas <- data.frame(unlist(cbsas))
-names(cbsas)[names(cbsas) == 'unlist.cbsas.'] <- 'cbsa_name'
-#----------------
-
-
+#
 # TO DO
 # (/) SWITCH BETWEEN COUNTY/CBSA
 # (/) DOWNLOAD DATASETS
@@ -79,7 +66,7 @@ ui <- navbarPage(
         ),
         selectizeInput(
           "cbsa_co_places", " Or, select all the counties within the metros:",
-          choices = cbsas$cbsa_name, multiple = TRUE
+          choices = county_cbsa_st$cbsa_name, multiple = TRUE
         ),
         selectizeInput(
           "co_datasets", "2. Search and select the datasets:", 
