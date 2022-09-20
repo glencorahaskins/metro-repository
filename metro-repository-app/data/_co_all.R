@@ -61,33 +61,3 @@ rm(common_col_names)
 common_col_names <- intersect(names(co_all), names(mealgap))
 co_all <- merge(co_all, mealgap, by = common_col_names, all.x = TRUE)
 rm(common_col_names)
-
-# Encode county names ------------------------
-
-library(tidycensus)
-data(fips_codes)
-
-fips_codes$stco_name <- NA
-fips_codes$stco_name <- as.character(fips_codes$stco_name)
-
-fips_codes$stco_name <- paste(fips_codes$county, ", ", fips_codes$state_name)
-fips_codes$stco_name <- gsub('  ', ' ',fips_codes$stco_name)
-fips_codes$stco_name <- gsub(' ,', ',',fips_codes$stco_name)
-
-fips_codes$stco_code <- NA
-fips_codes$stco_code <- as.character(fips_codes$stco_code)
-
-fips_codes$stco_code <- paste(fips_codes$state_code, fips_codes$county_code)
-fips_codes$stco_code <- gsub(' ','',fips_codes$stco_code)
-
-stco <- names(fips_codes) %in% c("stco_code", "stco_name")
-fips_codes <- fips_codes[stco]
-rm(stco)
-
-common_col_names <- intersect(names(co_all), names(fips_codes))
-co_all <- merge(co_all, fips_codes, by = common_col_names, all.x = TRUE)
-rm(common_col_names)
-
-rm(fips_codes)
-
-co_all <- co_all %>% relocate(stco_name, .after = stco_code)
