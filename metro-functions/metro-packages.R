@@ -12,3 +12,4 @@ metro.packages <- function(metro.packages) {
 }
 
 metro.packages()
+rm(metro.packages)
