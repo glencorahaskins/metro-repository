@@ -1,22 +1,6 @@
 # Urban Institute Data Catalog, Credit Health during the COVID-19 Pandemic
 
-library(censusapi)
-library(data.table)
-library(dplyr)
-library(DT)
-library(ggplot2)
-library(markdown)
-library(plotly)
-library(readr)
-library(rJava)
-library(shiny)
-library(stringr)
-library(sqldf)
-library(tidycensus)
-library(tidyverse)
-library(readxl)
-library(openxlsx)
-library(writexl)
+source("https://raw.githubusercontent.com/glencorahaskins/metro-repository/main/metro-functions/metro-packages.R")
 
 credit.url <- "https://urban-data-catalog.s3.amazonaws.com/drupal-root-live/2022/02/08/covidcredithealth_county.xlsx"
 download.file(credit.url, "covidcredithealth_county.xlsx", quiet = TRUE, mode = "wb")

@@ -1,6 +1,6 @@
 setwd("C:/Users/ghask/The Brookings Institution/Metro Research - JParilla/Glencora/GitHub/metro-repository/metro-repository-app")
 
-library(devtools)
+source("https://raw.githubusercontent.com/glencorahaskins/metro-repository/main/metro-functions/metro-packages.R")
 
 credit_cty <- "https://raw.githubusercontent.com/glencorahaskins/metro-repository/main/metro-repository-app/data/credit_cty.R"
 socialcapital_cty <- "https://raw.githubusercontent.com/glencorahaskins/metro-repository/main/metro-repository-app/data/socialcapital_cty.R"

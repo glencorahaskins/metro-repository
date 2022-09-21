@@ -1,22 +1,6 @@
 # Urban Institute Data Catalog, SNAP Meal Gap 2020
 
-library(censusapi)
-library(data.table)
-library(dplyr)
-library(DT)
-library(ggplot2)
-library(markdown)
-library(plotly)
-library(readr)
-library(rJava)
-library(shiny)
-library(stringr)
-library(sqldf)
-library(tidycensus)
-library(tidyverse)
-library(readxl)
-library(openxlsx)
-library(writexl)
+source("https://raw.githubusercontent.com/glencorahaskins/metro-repository/main/metro-functions/metro-packages.R")
 
 mealgap.url <- "https://ui-spark-social-science-public.s3.amazonaws.com/data/SNAP+Meal+Gap+-+2020+data.csv"
 download.file(mealgap.url, "SNAP+Meal+Gap+-+2020+data.csv", quiet = TRUE, mode = "wb")

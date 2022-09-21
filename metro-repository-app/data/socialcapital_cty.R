@@ -1,22 +1,6 @@
 # Opportunity Atlas Social Capital
 
-library(censusapi)
-library(data.table)
-library(dplyr)
-library(DT)
-library(ggplot2)
-library(markdown)
-library(plotly)
-library(readr)
-library(rJava)
-library(shiny)
-library(stringr)
-library(sqldf)
-library(tidycensus)
-library(tidyverse)
-library(readxl)
-library(openxlsx)
-library(writexl)
+source("https://raw.githubusercontent.com/glencorahaskins/metro-repository/main/metro-functions/metro-packages.R")
 
 socialcapital.url <- "https://data.humdata.org/dataset/85ee8e10-0c66-4635-b997-79b6fad44c71/resource/ec896b64-c922-4737-b759-e4bd7f73b8cc/download/social_capital_county.csv"
 download.file(socialcapital.url, "social_capital_county.csv", quiet = TRUE, mode = "wb")

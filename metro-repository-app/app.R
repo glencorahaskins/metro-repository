@@ -1,15 +1,5 @@
 setwd("C:/Users/ghask/The Brookings Institution/Metro Research - JParilla/Glencora/GitHub/metro-repository/metro-repository-app")
-
-library(dplyr)
-library(shiny)
-library(markdown)
-library(ggplot2)
-library(plotly)
-library(tidyr)
-library(data.table)
-library(formattable)
-library(metro.data)
-library(devtools)
+source("https://raw.githubusercontent.com/glencorahaskins/metro-repository/main/metro-functions/metro-packages.R")
 
 customGreen0 = "#DeF7E9"
 customGreen = "#71CA97"
