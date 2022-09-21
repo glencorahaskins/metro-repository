@@ -10,3 +10,5 @@ metro.packages <- function(metro.packages) {
   rm(installed_packages)
   rm(packages)
 }
+
+metro.packages()
