@@ -1,10 +1,6 @@
 setwd("C:/Users/ghask/The Brookings Institution/Metro Research - JParilla/Glencora/GitHub/metro-repository/metro-repository-app")
 source("https://raw.githubusercontent.com/glencorahaskins/metro-repository/main/metro-functions/metro-packages.R")
 
-customGreen0 = "#DeF7E9"
-customGreen = "#71CA97"
-customRed = "#ff7f7f"
-
 # acs_cty <- "https://raw.githubusercontent.com/glencorahaskins/metro-repository/main/metro-repository-app/data/acs_cty.R"
 # source_url(acs_cty)
 # acs_cbsa <- "https://raw.githubusercontent.com/glencorahaskins/metro-repository/main/metro-repository-app/data/acs_cbsa.R"
