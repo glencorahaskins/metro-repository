@@ -10,6 +10,7 @@ metro.packages <- function(metro.packages) {
                 'jsonlite', 
                 'librarian', 
                 'lubridate', 
+                'magrittr',
                 'markdown', 
                 'metro.data', 
                 'openxlsx', 

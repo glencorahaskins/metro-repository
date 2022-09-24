@@ -8,6 +8,7 @@ source("https://raw.githubusercontent.com/glencorahaskins/metro-repository/main/
 
 cty <- "https://raw.githubusercontent.com/glencorahaskins/metro-repository/main/metro-repository-app/data/_co_all.R"
 source_url(cty)
+rm(cty)
 
 county_cbsa_st <- county_cbsa_st %>% select('stco_code', 'co_type', 'st_code', 'st_name', 'cbsa_code', 'cbsa_name', 'cbsa_type', 'cbsa_is.top100', 'cbsa_size')
 county_cbsa_st <- county_cbsa_st[complete.cases(county_cbsa_st),]
@@ -69,59 +70,59 @@ ui <- navbarPage(
       ),
       
       # Show data table
-      mainPanel(
-        DT::dataTableOutput("table_co")
+      mainPanel(style="position:fixed;margin-left:32vw;",
+                DT::dataTableOutput("table_co")
       )
     )
   ),
-#  tabPanel(
-#    "Metro",
-#    helpText("If you have any questions or comments, please contact Sifan Liu (sliu@brookings.edu)"),
-#    
-#    # Sidebar
-#    sidebarLayout(
-#      sidebarPanel(
-#        h3("Data table"),
-#        
-#        
-#        selectizeInput(
-#          "cbsa_places", "1. Search and select the metros: (or, leave blank to select all)",
-#          choices = county_cbsa_st$cbsa_name, multiple = TRUE
-#        ),
-#        selectizeInput(
-#          "cbsa_datasets", "2. Search and select the datasets:", 
-#          # selected = "cbsa_acs",
-#          choices = names(list_all_cbsa), multiple = TRUE
-#        ),
-#        actionButton("update_cbsa", "Show metro data"), 
-#        
-#        downloadButton("download_cbsa", label = "Download csv"),
-#        
-#        h3("Scatter plot"),
-#        checkboxInput("scatter_plot", label = "Create a scatter plot", value = FALSE),
-#        
-#        conditionalPanel(
-#          condition = "input.scatter_plot == true",
-#          
-#          selectizeInput(
-#            "x_var", "varibles on x axis", choices = "cbsa_emp"
-#          ),
-#          selectizeInput(
-#            "y_var", "varibles on y axis", choices = "cbsa_pop"
-#          ),
-#          
-#          plotlyOutput ("Plot")
-#        )
-#        
-#      ),
-#      
-#      
-#      # Show data table
-#      mainPanel(
-#        DT::dataTableOutput("table_cbsa")
-#      )
-#    )
-#  )
+  #  tabPanel(
+  #    "Metro",
+  #    helpText("If you have any questions or comments, please contact Sifan Liu (sliu@brookings.edu)"),
+  #    
+  #    # Sidebar
+  #    sidebarLayout(
+  #      sidebarPanel(
+  #        h3("Data table"),
+  #        
+  #        
+  #        selectizeInput(
+  #          "cbsa_places", "1. Search and select the metros: (or, leave blank to select all)",
+  #          choices = county_cbsa_st$cbsa_name, multiple = TRUE
+  #        ),
+  #        selectizeInput(
+  #          "cbsa_datasets", "2. Search and select the datasets:", 
+  #          # selected = "cbsa_acs",
+  #          choices = names(list_all_cbsa), multiple = TRUE
+  #        ),
+  #        actionButton("update_cbsa", "Show metro data"), 
+  #        
+  #        downloadButton("download_cbsa", label = "Download csv"),
+  #        
+  #        h3("Scatter plot"),
+  #        checkboxInput("scatter_plot", label = "Create a scatter plot", value = FALSE),
+  #        
+  #        conditionalPanel(
+  #          condition = "input.scatter_plot == true",
+  #          
+  #          selectizeInput(
+  #            "x_var", "varibles on x axis", choices = "cbsa_emp"
+  #          ),
+  #          selectizeInput(
+  #            "y_var", "varibles on y axis", choices = "cbsa_pop"
+  #          ),
+  #          
+  #          plotlyOutput ("Plot")
+  #        )
+  #        
+  #      ),
+  #      
+  #      
+  #      # Show data table
+  #      mainPanel(
+  #        DT::dataTableOutput("table_cbsa")
+  #      )
+  #    )
+  #  )
 )
 
 
@@ -156,31 +157,31 @@ server <- function(input, output, session) {
     
   })
   
-#  info_cbsa <- eventReactive(input$update_cbsa, {
-#    if (is.null(input$cbsa_places)) {
-#      cbsa_codes <- county_cbsa_st$cbsa_code
-#    } else {
-#      (cbsa_codes <- (county_cbsa_st %>% filter(cbsa_name %in% input$cbsa_places))$cbsa_code)
-#    }
-#    
-#    if (is.null(input$cbsa_datasets)){
-#      validate(need(!is.null(input$cbsa_datasets), "Please choose your datasets"))
-#    } else{
-#      cbsa_columns <- unlist(list_all_cbsa[input$cbsa_datasets], use.names = F)
-#    }
-#    
-#    updateSelectizeInput(session, "x_var", "Choose a variable on x axis ", choices = c(cbsa_columns,"cbsa_pop", "cbsa_emp"), selected = "cbsa_pop")
-#    updateSelectizeInput(session, "y_var", "Choose a variable on y axis ", choices = c(cbsa_columns,"cbsa_pop", "cbsa_emp"), selected = "cbsa_emp")
-#    
-#    
-#    cbsa_df <- cbsa_all %>%
-#      filter(cbsa_code %in% cbsa_codes) %>%
-#      select(cbsa_columns) %>%
-#      tidyr::drop_na(-all_of(contains("cbsa_"))) %>% 
-#      unique() %>%
-#      left_join(county_cbsa_st %>% select(dplyr::contains("cbsa_"),-cbsa_name) %>% unique(), by = "cbsa_code") %>%
-#      mutate_if(is.numeric, ~ round(., 2))
-#  })
+  #  info_cbsa <- eventReactive(input$update_cbsa, {
+  #    if (is.null(input$cbsa_places)) {
+  #      cbsa_codes <- county_cbsa_st$cbsa_code
+  #    } else {
+  #      (cbsa_codes <- (county_cbsa_st %>% filter(cbsa_name %in% input$cbsa_places))$cbsa_code)
+  #    }
+  #    
+  #    if (is.null(input$cbsa_datasets)){
+  #      validate(need(!is.null(input$cbsa_datasets), "Please choose your datasets"))
+  #    } else{
+  #      cbsa_columns <- unlist(list_all_cbsa[input$cbsa_datasets], use.names = F)
+  #    }
+  #    
+  #    updateSelectizeInput(session, "x_var", "Choose a variable on x axis ", choices = c(cbsa_columns,"cbsa_pop", "cbsa_emp"), selected = "cbsa_pop")
+  #    updateSelectizeInput(session, "y_var", "Choose a variable on y axis ", choices = c(cbsa_columns,"cbsa_pop", "cbsa_emp"), selected = "cbsa_emp")
+  #    
+  #    
+  #    cbsa_df <- cbsa_all %>%
+  #      filter(cbsa_code %in% cbsa_codes) %>%
+  #      select(cbsa_columns) %>%
+  #      tidyr::drop_na(-all_of(contains("cbsa_"))) %>% 
+  #      unique() %>%
+  #      left_join(county_cbsa_st %>% select(dplyr::contains("cbsa_"),-cbsa_name) %>% unique(), by = "cbsa_code") %>%
+  #      mutate_if(is.numeric, ~ round(., 2))
+  #  })
   
   # show output table
   output$table_co <- DT::renderDataTable({
@@ -190,33 +191,36 @@ server <- function(input, output, session) {
       co_df,
       options = list(
         lengthMenu = list(c(5, 15, -1), c("5", "15", "All")),
-        pageLength = 100
-      )
-    )
+        pageLength = 100,
+        initComplete = JS(
+          "function(settings, json) {",
+          "$('td').css({'border': '1px solid black'});",
+          "$('th').css({'border': '1px solid black'});",
+          "}")))
   })
   
-#  output$table_cbsa <- DT::renderDataTable({
-#    cbsa_df <- info_cbsa()
-#    
-#    DT::datatable(
-#      cbsa_df,
-#      options = list(
-#        lengthMenu = list(c(5, 15, -1), c("5", "15", "All")),
-#        pageLength = 100
-#      )
-#    )
-#  })
+  #  output$table_cbsa <- DT::renderDataTable({
+  #    cbsa_df <- info_cbsa()
+  #    
+  #    DT::datatable(
+  #      cbsa_df,
+  #      options = list(
+  #        lengthMenu = list(c(5, 15, -1), c("5", "15", "All")),
+  #        pageLength = 100
+  #      )
+  #    )
+  #  })
   
-#  # info_plot <- eventReactive(input$update_plot, )
+  #  # info_plot <- eventReactive(input$update_plot, )
   
-#  output$Plot <- renderPlotly({
-#    
-#    df <- info_cbsa()
-#    # var <- info_plot()
-#    
-#    create_scatter(df, input$x_var, input$y_var, label = "cbsa_name")
-#    
-#  })
+  #  output$Plot <- renderPlotly({
+  #    
+  #    df <- info_cbsa()
+  #    # var <- info_plot()
+  #    
+  #    create_scatter(df, input$x_var, input$y_var, label = "cbsa_name")
+  #    
+  #  })
   
   
   # get download link
@@ -229,14 +233,14 @@ server <- function(input, output, session) {
     }
   )
   
-#  output$download_cbsa <- downloadHandler(
-#    filename = function() {
-#      paste("cbsa_", Sys.Date(), ".csv")
-#    },
-#    content = function(filename) {
-#      write.csv(info_cbsa(), filename)
-#    }
-#  )
+  #  output$download_cbsa <- downloadHandler(
+  #    filename = function() {
+  #      paste("cbsa_", Sys.Date(), ".csv")
+  #    },
+  #    content = function(filename) {
+  #      write.csv(info_cbsa(), filename)
+  #    }
+  #  )
 }
 
 # Run the application
