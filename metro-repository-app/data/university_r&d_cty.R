@@ -29,12 +29,17 @@ sserf2019 <- fread('facilities_2019_imputed.csv')
 
 ncses <- "https://ncsesdata.nsf.gov/profiles/site?method=downloadRankings&src=HERD&s=&o="
 download.file(ncses, "ncses.xlsx", quiet = TRUE, mode = "wb")
-ncses <- read.xlsx(xlsxFile = "ncses.xlsx", sheet = 1, fillMergedCells = TRUE)
-file.remove("ncses.xlsx")
-rm(credit.url)
+ncses <- read.xlsx("ncses.xlsx", sheetIndex = 1, fillMergedCells = TRUE, colNames = FALSE)
 
+st <- which(ncses[1] == "Institution")
+st <- gsub('L', '', st)
+st <- as.numeric(st)
+st <- st + 1
 
-
+ncses <- read.xlsx("ncses.xlsx", sheetIndex = 1, fillMergedCells = TRUE, startRow = st)
+names <- colnames(ncses)
+percentiles <- names[grepl("c..Percentile", names)]
+percentiles <- append(percentiles, "Institution", after = 0)
 
 
 
