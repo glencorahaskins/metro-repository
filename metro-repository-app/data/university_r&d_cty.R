@@ -1,4 +1,5 @@
 source("https://raw.githubusercontent.com/glencorahaskins/metro-repository/main/metro-functions/metro-packages.R")
+gc()
 
 ipeds <- "https://nces.ed.gov/ipeds/datacenter/data/HD2021.zip"
 download.file(ipeds, "HD2021.zip", quiet = TRUE, mode = "wb")
@@ -29,19 +30,37 @@ sserf2019 <- fread('facilities_2019_imputed.csv')
 
 ncses <- "https://ncsesdata.nsf.gov/profiles/site?method=downloadRankings&src=HERD&s=&o="
 download.file(ncses, "ncses.xlsx", quiet = TRUE, mode = "wb")
-ncses <- read.xlsx("ncses.xlsx", sheetIndex = 1, fillMergedCells = TRUE, colNames = FALSE)
+ncses <- read_excel("ncses.xlsx")
 
 st <- which(ncses[1] == "Institution")
 st <- gsub('L', '', st)
 st <- as.numeric(st)
-st <- st + 1
 
-ncses <- read.xlsx("ncses.xlsx", sheetIndex = 1, fillMergedCells = TRUE, startRow = st)
-names <- colnames(ncses)
-percentiles <- names[grepl("c..Percentile", names)]
-percentiles <- append(percentiles, "Institution", after = 0)
+ncses <- read_excel("ncses.xlsx", skip = st)
+ncses <- ncses[complete.cases(ncses[,c("Institution")]),]
+ncses <- ncses[complete.cases(ncses[,2]),]
+ncses <- ncses[ncses$Institution != "Total R&D expenditures", ]
 
+yrs <- ncses %>% select(ends_with(c(".0", "Institution")))
+yrs <- yrs %>% relocate(Institution) 
 
+oldw <- getOption("warn")
+options(warn = -1)
+yrs <- yrs %>% rename_at(.vars = vars(ends_with(".0")),
+                         .funs = funs(sub("[.]0$","",.)))
+options(warn = oldw)
+rm(oldw)
+
+ncses <- ncses %>% relocate(Institution, .after = last_col())
+ncses$blank <- NA
+ncses <- ncses %>% relocate(blank)
+
+data_names <- names(ncses[seq_len(ncol(ncses)) %% 4 == 0])
+data_names <- append(data_names, "Institution")
+
+ncses <- ncses[data_names]
+ncses <- ncses %>% relocate(Institution)
+names(ncses) <- names(yrs)
 
 file.remove("HD2021.csv")
 file.remove("HD2021.zip")
@@ -53,12 +72,25 @@ file.remove("herd_2020.csv")
 file.remove("herd_2020.csv.zip")
 file.remove("facilities_2019_imputed.csv")
 file.remove("facilities_2019_imputed.csv.zip")
+file.remove("ncses.xlsx")
+rm(data_names)
+rm(st)
+rm(yrs)
 gc()
 
 
-
-
-
+ncses$Institution <- gsub("\\[|\\]", "", ncses$Institution)
+ncses$Institution <- gsub("0", "", ncses$Institution)
+ncses$Institution <- gsub("1", "", ncses$Institution)
+ncses$Institution <- gsub("2", "", ncses$Institution)
+ncses$Institution <- gsub("3", "", ncses$Institution)
+ncses$Institution <- gsub("4", "", ncses$Institution)
+ncses$Institution <- gsub("5", "", ncses$Institution)
+ncses$Institution <- gsub("6", "", ncses$Institution)
+ncses$Institution <- gsub("7", "", ncses$Institution)
+ncses$Institution <- gsub("8", "", ncses$Institution)
+ncses$Institution <- gsub("9", "", ncses$Institution)
+ncses$Institution <- trimws(ncses$Institution)
 
 
 
