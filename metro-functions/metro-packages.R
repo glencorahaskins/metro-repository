@@ -30,7 +30,8 @@ metro.packages <- function(metro.packages) {
                 'tidyverse', 
                 'writexl', 
                 'xlsx', 
-                'XML')
+                'XML',
+                'zoo')
   
   installed_packages <- packages %in% rownames(installed.packages())
   if (any(installed_packages == FALSE)) {
