@@ -1,5 +1,6 @@
 metro.packages <- function(metro.packages) {
-  packages <- c('censusapi', 
+  packages <- c('censusapi',
+                'educationdata',
                 'data.table', 
                 'devtools', 
                 'dplyr', 
