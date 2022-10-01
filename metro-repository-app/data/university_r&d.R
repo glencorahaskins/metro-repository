@@ -1220,6 +1220,33 @@ ncses$ipeds_unitid[which(ncses$ncses_inst_id == 'U4763001')] <- 488554
 ncses$ipeds_unitid[which(ncses$ncses_inst_id == 'U2590006')] <- 490805
 ncses$ipeds_unitid[which(ncses$ncses_inst_id == 'U3125005')] <- 492689
 
+# Manual code-in of missing ZIP Codes --------------------------------------------------------------------------
+
+ncses$inst_zip[which(ncses$ncses_inst_id == 'U4759001')] <- '17013'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'N2840001')] <- '31411'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'U2541001')] <- '11201'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'N2127001')] <- '93501'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'R3068001')] <- '64110'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'U3147001')] <- '85004'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'U0265001')] <- '31419'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'U2931001')] <- '30060'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'U2883001')] <- '21202'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'U2225001')] <- '1608'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'U3342001')] <- '8103'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'U0948001')] <- '1769'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'U2498015')] <- '19355'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'U2498006')] <- '18034'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'U2498003')] <- '16601'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'U2498004')] <- '15061'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'U2498005')] <- '19610'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'U2498017')] <- '19063'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'U2509001')] <- '19104'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'U3106003')] <- '77554'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'U1247001')] <- '05764'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'U1787001')] <- '22134'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'U3212001')] <- '12308'
+ncses$inst_zip[which(ncses$ncses_inst_id == 'U3419001')] <- '33805'
+
 # Read in html.ncses source code from IPEDS Data Center ---------------------------------------------------------
 
 html.ipeds <- readLines('https://nces.ed.gov/ipeds/datacenter/DataFiles.aspx?year=-1')
@@ -1256,6 +1283,45 @@ rm(recent)
 rm(zip)
 rm(file)
 rm(link)
+gc()
+
+# NCSES x IPEDS merge and data cleaning  ---------------------------------------------------------
+
+ipeds <- subset(ipeds, select = c('UNITID','INSTNM','ZIP','EIN','DUNS','OPEID','HBCU','TRIBAL','COUNTYCD','LONGITUD','LATITUDE'))
+
+names(ipeds)[names(ipeds) == 'UNITID'] <- 'ipeds_unitid'
+
+common_col_names <- intersect(names(ncses), names(ipeds))
+ncses <- merge(ncses, ipeds, by = common_col_names, all = TRUE)
+rm(common_col_names)
+rm(ipeds)
+
+ncses <-  ncses[!(is.na(ncses$ncses_inst_id) | ncses$ncses_inst_id==""), ]
+
+ncses$ZIP <- coalesce(ncses$ZIP, ncses$inst_zip)
+ncses <- subset(ncses, select = -c(inst_zip))
+
+ncses$INSTNM <- coalesce(ncses$INSTNM, ncses$inst_name_short)
+ncses <- subset(ncses, select = -c(inst_name_short, inst_name_long, inst_id))
+
+names(ncses)[names(ncses) == 'ipeds_unitid'] <- 'IPEDS_ID'
+names(ncses)[names(ncses) == 'ncses_inst_id'] <- 'NCSES_ID'
+
+ncses$ZIP <- substring(ncses$ZIP, 1, 5)
+
+# Encode ZIP Codes from HUD crosswalk (static on GitHub) ---------------------------------------------------------
+
+gc()
+zip2cty <- "https://github.com/glencorahaskins/metro-repository/blob/main/metro-repository-app/data/static%20frames/hud_zip2cty.Rda?raw=true"
+download.file(zip2cty, "zip2cty.Rda")
+zip2cty <- load("zip2cty.Rda")
+
+file.remove("zip2cty.Rda")
+rm(zip2cty)
+
+
+
+
 
 
 
