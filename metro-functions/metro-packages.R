@@ -33,6 +33,7 @@ metro.packages <- function(metro.packages) {
                 'writexl', 
                 'xlsx', 
                 'XML',
+                'zipcodeR',
                 'zoo')
   
   installed_packages <- packages %in% rownames(installed.packages())
