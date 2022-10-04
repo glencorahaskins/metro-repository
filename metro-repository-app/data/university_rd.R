@@ -1266,8 +1266,13 @@ html.ipeds <- data.frame(html.ipeds[!grepl("Directory information, ", html.ipeds
 names(html.ipeds) <- c("html.ipeds")
 
 recent <- head(html.ipeds$html.ipeds, 1)
-zip <- substring(recent, 169)
-zip <- substring(zip, 1, 10)
+position <- str_locate_all(pattern = "HD20", recent)
+position <- unlist(position)
+zip <- substring(recent, position[1])
+position <- str_locate_all(pattern = "HD20", zip)
+position <- unlist(position)
+position <- position[2] - 1
+zip <- substring(zip, 1, position)
 file <- gsub(".zip","",zip)
 file <- paste(file, ".csv", sep = "")
 link <- paste("https://nces.ed.gov/ipeds/datacenter/data/", zip, sep = "")
@@ -1283,6 +1288,7 @@ rm(recent)
 rm(zip)
 rm(file)
 rm(link)
+rm(position)
 gc()
 
 # NCSES x IPEDS merge and data cleaning  ---------------------------------------------------------
@@ -1309,15 +1315,74 @@ names(ncses)[names(ncses) == 'ncses_inst_id'] <- 'NCSES_ID'
 
 ncses$ZIP <- substring(ncses$ZIP, 1, 5)
 
-# Encode ZIP Codes from HUD crosswalk (static on GitHub) ---------------------------------------------------------
+# Encode and merge ZIP Codes from HUD crosswalk (static on GitHub) ---------------------------------------------------------
 
 gc()
-zip2cty <- "https://github.com/glencorahaskins/metro-repository/blob/main/metro-repository-app/data/static%20frames/hud_zip2cty.Rda?raw=true"
-download.file(zip2cty, "zip2cty.Rda")
-zip2cty <- load("zip2cty.Rda")
+zip2cty <- "https://github.com/glencorahaskins/metro-repository/blob/main/metro-repository-app/data/static%20frames/hud_zip2cty.zip?raw=true"
+download.file(zip2cty, "zip2cty.zip", quiet = TRUE, mode = "wb")
+unzip("zip2cty.zip")
+load(file = "hud_zip2cty.Rda")
+file.remove("zip2cty.zip")
+file.remove("hud_zip2cty.Rda")
 
-file.remove("zip2cty.Rda")
+names(zip2cty)[names(zip2cty) == 'zip'] <- 'ZIP'
+
+zip2cty <- zip2cty[!duplicated(zip2cty$ZIP),]
+zip2cty$county <- as.numeric(zip2cty$county)
+
+common_col_names <- intersect(names(ncses), names(zip2cty))
+ncses <- merge(ncses, zip2cty, by = common_col_names, all = TRUE)
+rm(common_col_names)
 rm(zip2cty)
+
+ncses <-  ncses[!(is.na(ncses$NCSES_ID) | ncses$NCSES_ID ==""), ]
+ncses$COUNTYCD <- coalesce(ncses$COUNTYCD, ncses$county)
+
+ncses <- subset(ncses, select = -c(county, usps_zip_pref_city, usps_zip_pref_state, res_ratio, bus_ratio, oth_ratio, tot_ratio))
+
+ncses <- ncses %>% relocate(NCSES_ID) 
+ncses <- ncses %>% relocate(IPEDS_ID, .after = NCSES_ID)
+ncses <- ncses %>% relocate(EIN, .after = IPEDS_ID)
+ncses <- ncses %>% relocate(DUNS, .after = EIN)
+ncses <- ncses %>% relocate(OPEID, .after = DUNS)
+ncses <- ncses %>% relocate(INSTNM, .after = OPEID)
+ncses <- ncses %>% relocate(ZIP, .after = last_col())
+
+# Aggregate to county ---------------------------------------------------------
+
+univ_rd_cty <- ncses
+univ_rd_cty <- subset(univ_rd_cty, select = -c(NCSES_ID, IPEDS_ID, EIN, DUNS, OPEID, INSTNM, HBCU, TRIBAL, LONGITUD, LATITUDE, ZIP))
+
+univ_rd_cty <- univ_rd_cty %>% relocate(COUNTYCD) 
+
+current_names <- names(univ_rd_cty)
+names(univ_rd_cty) <- c("COUNTYCD", "y1", "y2", "y3", "y4", "y5", "y6", "y7", "y8", "y9", "y10")
+
+univ_rd_cty <- univ_rd_cty %>% group_by(COUNTYCD) %>% summarize(y1 = sum(y1),
+                                                                 y2 = sum(y2),
+                                                                 y3 = sum(y3),
+                                                                 y4 = sum(y4),
+                                                                 y5 = sum(y5),
+                                                                 y6 = sum(y6),
+                                                                 y7 = sum(y7),
+                                                                 y8 = sum(y8),
+                                                                 y9 = sum(y9),
+                                                                 y10 = sum(y10))
+
+names(univ_rd_cty) <- current_names
+rm(current_names)
+
+univ_rd_cty <-  univ_rd_cty[!(is.na(univ_rd_cty$COUNTYCD) | univ_rd_cty$COUNTYCD ==""), ]
+
+univ_rd_cty$COUNTYCD <- as.character(univ_rd_cty$COUNTYCD)
+for(i in 1:length(univ_rd_cty$COUNTYCD)) {
+  if(as.numeric(univ_rd_cty$COUNTYCD[i]) < 10000) {
+    univ_rd_cty$COUNTYCD[i] <- paste0("0", univ_rd_cty$COUNTYCD[i])
+  }
+}
+rm(i)
+
+
 
 
 
