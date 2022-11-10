@@ -19,6 +19,7 @@ metro.packages <- function(metro.packages) {
                 'metro.data', 
                 'openxlsx', 
                 'pacman', 
+                'pdftools',
                 'plotly',
                 'RCurl',
                 'readr', 
