@@ -2,7 +2,6 @@ monitor.packages <- function(monitor.packages) {
   packages <- c('censusapi',
                 'educationdata',
                 'data.table', 
-                'devtools', 
                 'dplyr', 
                 'DT', 
                 'formattable', 
